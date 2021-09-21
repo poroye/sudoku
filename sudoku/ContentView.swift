@@ -16,16 +16,28 @@ struct ContentView: View {
             ForEach(grid.grid.indices,id:\.self){row in
                 HStack{
                     ForEach(grid.grid[row].indices,id:\.self){col in
-                        Text("\(grid.historyGrid[grid.now][row][col])")
-                            .font(.body)
-                            .frame(width: 10, height: 10, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .padding(10)
-                            .background(Color.blue)
+                        if grid.historyGrid[grid.now][row][col] == 0{
+                            Text(" ")
+                                .font(.body)
+                                .frame(width: 10, height: 10, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                .padding(10)
+                                .background(Color.blue)
+                        }else{
+                            Text("\(grid.historyGrid[grid.now][row][col])")
+                                .font(.body)
+                                .frame(width: 10, height: 10, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                .padding(10)
+                                .background(Color.blue)
+                        }
                     }
                 }
             }
+            
         }.onAppear(perform: {
             grid.fillGrid(grid: &grid.grid)
+            grid.historyGrid.append(grid.grid)
+            grid.now += 1
+            grid.removeGrid(grid: &grid.grid)
             grid.historyGrid.append(grid.grid)
             grid.now += 1
         })
