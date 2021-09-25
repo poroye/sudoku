@@ -23,7 +23,7 @@ class Grid:ObservableObject{
     
     var counter = 1
     
-    
+    @Published var select = 82
 
     func checkWin(grid:[[Int]]) -> Bool{
       for i in (0..<9){
@@ -122,6 +122,19 @@ class Grid:ObservableObject{
       }
     }
 
+    func placeNum(num:Int){
+        grid = historyGrid[now]
+        grid[select/9][select%9] = num
+        historyGrid.append(grid)
+        now += 1
+        select = 82
+    }
+    
+    func undoFill(){
+        historyGrid = Array(historyGrid[0...now-1])
+        now -= 1
+    }
+    
     func printGrid(grid:[[Int]]){
       print("-------------------------------------")
       for i in 0..<grid.count{

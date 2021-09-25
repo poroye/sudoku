@@ -13,26 +13,55 @@ struct ContentView: View {
     
     var body: some View {
         VStack{
+            Spacer()
             ForEach(grid.grid.indices,id:\.self){row in
                 HStack{
                     ForEach(grid.grid[row].indices,id:\.self){col in
                         if grid.historyGrid[grid.now][row][col] == 0{
-                            Text(" ")
-                                .font(.body)
-                                .frame(width: 10, height: 10, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                .padding(10)
-                                .background(Color.blue)
+                            Button {
+                                grid.select = row * 9 + col
+                            } label:{
+                                Rectangle()
+                                    .fill(Color.blue)
+                                    .frame(width: 30, height: 30)
+                            }
                         }else{
                             Text("\(grid.historyGrid[grid.now][row][col])")
                                 .font(.body)
-                                .frame(width: 10, height: 10, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                .padding(10)
+                                .frame(width: 30, height: 30, alignment: .center)
                                 .background(Color.blue)
                         }
                     }
                 }
             }
-            
+            Spacer()
+            HStack{
+                if grid.now > 2{
+                    Button {
+                        grid.undoFill()
+                    } label:{
+                        Text("undo")
+                            .font(.body)
+                            .frame(width: 60, height: 30, alignment: .center)
+                            .background(Color.orange)
+                    }
+                }
+                Spacer()
+                if grid.select < 81{
+                    ForEach((1...9), id: \.self){num in
+                        if grid.checkfill(grid: grid.historyGrid[grid.now], value: num, row: grid.select/9, col: grid.select%9){
+                            Button {
+                                grid.placeNum(num: num)
+                            } label:{
+                                Text("\(num)")
+                                    .font(.body)
+                                    .frame(width: 30, height: 30, alignment: .center)
+                                    .background(Color.gray)
+                            }
+                        }
+                    }
+                }
+            }
         }.onAppear(perform: {
             grid.fillGrid(grid: &grid.grid)
             grid.historyGrid.append(grid.grid)
